@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import axios from "axios";
+import { FETCH_BOOKS } from "./type";
 
 @Component // need this for reactivity
 export default class BookList extends Vue {
@@ -9,17 +9,12 @@ export default class BookList extends Vue {
     title: { label: "Book Title", sortable: true },
     actions: { label: "Action", class: "text-center" }
   };
-  books = [];
   errors = [];
   created() {
-    axios
-      .get(`http://localhost:3001/api/book`)
-      .then(response => {
-        this.books = response.data;
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+    this.$store.dispatch(FETCH_BOOKS);
+  }
+  get books() {
+    return this.$store.getters.books;
   }
   details(book) {
     this.$router.push({

@@ -1,32 +1,24 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import axios from "axios";
+import { GET_EDIT_BOOK, UPDATE_BOOK } from "./type";
 
 @Component // need this for reactivity
 export default class EditBook extends Vue {
-  book = {};
-  created() {
-    axios
-      .get(`http://localhost:3001/api/book/` + this.$route.params.id)
-      .then(response => {
-        this.book = response.data;
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+  async created() {
+    await this.$store.dispatch(GET_EDIT_BOOK, this.$route.params.id);
   }
-  onSubmit(evt) {
+  async onSubmit(evt) {
     evt.preventDefault();
-    axios
-      .put(`http://localhost:3001/api/book/` + this.$route.params.id, this.book)
-      .then(() => {
-        this.$router.push({
-          name: "ShowBook",
-          params: { id: this.$route.params.id }
-        });
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+    await this.$store.dispatch(UPDATE_BOOK, {
+      id: this.$route.params.id,
+      editBook: this.$store.getters.editBook
+    });
+    this.$router.push({
+      name: "ShowBook",
+      params: { id: this.$route.params.id }
+    });
+  }
+  get book() {
+    return this.$store.getters.editBook;
   }
 }

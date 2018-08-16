@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import BookList from "./pages/BookList";
-import ShowBook from "./pages/ShowBook";
-import CreateBook from "./pages/CreateBook";
-import EditBook from "./pages/EditBook";
+import BookList from "../pages/BookList";
+import ShowBook from "../pages/ShowBook";
+import CreateBook from "../pages/CreateBook";
+import EditBook from "../pages/EditBook";
 
 Vue.use(Router);
 

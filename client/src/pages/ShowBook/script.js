@@ -1,19 +1,11 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import axios from "axios";
+import { GET_BOOK, DELETE_BOOK } from "./type";
 
 @Component // need this for reactivity
 export default class ShowBook extends Vue {
-  book = [];
   created() {
-    axios
-      .get(`http://localhost:3001/api/book/` + this.$route.params.id)
-      .then(response => {
-        this.book = response.data;
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+    this.$store.dispatch(GET_BOOK, this.$route.params.id);
   }
   editbook(bookid) {
     this.$router.push({
@@ -21,16 +13,13 @@ export default class ShowBook extends Vue {
       params: { id: bookid }
     });
   }
-  deletebook(bookid) {
-    axios
-      .delete("http://localhost:3001/api/book/" + bookid)
-      .then(() => {
-        this.$router.push({
-          name: "BookList"
-        });
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+  async deletebook(bookid) {
+    await this.$store.dispatch(DELETE_BOOK, bookid);
+    this.$router.push({
+      name: "BookList"
+    });
+  }
+  get book() {
+    return this.$store.getters.showBook;
   }
 }
